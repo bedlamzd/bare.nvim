@@ -96,6 +96,12 @@ vim.g.have_nerd_font = true
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 
+-- Wrap things
+-- do not wrap by default
+vim.opt.wrap = false
+-- if nowrap, then scroll in increments of 5
+vim.opt.sidescroll = 5
+
 -- Tab stuff
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
@@ -148,7 +154,7 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣', precedes = '◢', extends = '◣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
