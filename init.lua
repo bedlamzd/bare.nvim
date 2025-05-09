@@ -1006,6 +1006,13 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
   {
+    'nvim-treesitter/nvim-treesitter-context',
+    opts = {
+      max_lines = vim.o.scrolloff, -- this space isn't used anyway, so let's make it useful
+      multiline_threshold = 2,
+    },
+  },
+  {
     'kevinhwang91/nvim-ufo',
     dependencies = { 'kevinhwang91/promise-async' },
     init = function(_)
