@@ -723,6 +723,8 @@ require('lazy').setup({
             },
           },
         },
+        docker_compose_language_service = {},
+        dockerls = {},
       }
 
       -- Ensure the servers and tools above are installed
