@@ -834,6 +834,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff_format' },
+        yaml = { 'yamlfmt' },
         sql = { 'sqlfmt' },
         markdown = { 'cbfmt', 'mdformat' },
         json = { 'jq' },
