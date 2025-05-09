@@ -225,6 +225,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+local lsp_methods = vim.lsp.protocol.Methods
+vim.lsp.handlers[lsp_methods.textDocument_hover] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'single', wrap = false, relative = false })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
