@@ -170,6 +170,15 @@ vim.opt.scrolloff = 5
 -- See `:help 'confirm'`
 vim.opt.confirm = true
 
+-- Наконец-то не нужно переключать раскладку в нормальном режиме
+vim.opt.langmap = {
+  'ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  'фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz',
+  "хъжэбю.;[]\\;'\\,./",
+  'ХЪЖЭБЮ\\,;{}:\\"<>?',
+  'ёЁ;`~',
+}
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
