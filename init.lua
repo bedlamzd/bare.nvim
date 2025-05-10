@@ -171,6 +171,7 @@ vim.opt.scrolloff = 5
 vim.opt.confirm = true
 
 -- Наконец-то не нужно переключать раскладку в нормальном режиме
+-- FIXME: messes with neotree in ENG layout - cannot set root for example
 vim.opt.langmap = {
   'ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   'фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz',
