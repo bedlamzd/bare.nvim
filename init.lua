@@ -597,6 +597,22 @@ require('lazy').setup({
             vim.lsp.buf.hover(config)
           end, 'Hover')
 
+          -- For a given variable, will peek its definition
+          map('gpd', function()
+            local ts_interop = require 'nvim-treesitter.textobjects.lsp_interop'
+            ts_interop.peek_definition_code('@block.outer', 'textobjects', vim.lsp.protocol.Methods.textDocument_definition)
+          end, '[P]eek [D]efinition')
+
+          -- For a given variable, will peek its type, if available, or its definition
+          -- (though depends on server I guess) doesn't work with vaiables
+          -- referencing functions (basedpyright at least), though. Seems like
+          -- they have type (hover shows signature), but are missing where it's
+          -- defined - typeDefinition returns nothing for them
+          map('gpt', function()
+            local ts_interop = require 'nvim-treesitter.textobjects.lsp_interop'
+            ts_interop.peek_definition_code('@block.outer', 'textobjects', vim.lsp.protocol.Methods.textDocument_typeDefinition)
+          end, '[P]eek [T]ype definition')
+
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
           map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
@@ -1081,13 +1097,12 @@ require('lazy').setup({
           },
         },
         lsp_interop = {
+          -- NOTE: I define my own keymaps in LSP sesction because I want to
+          -- use different lsp method to get definition. But floating window
+          -- options are global for plugin and defined here
           enable = true,
           floating_preview_opts = {
             border = 'single',
-          },
-          peek_definition_code = {
-            ['<leader>df'] = '@function.outer',
-            ['<leader>dF'] = '@class.outer',
           },
         },
       },
