@@ -1068,7 +1068,8 @@ require('lazy').setup({
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
+      -- NOTE: See meta issue with current problems https://github.com/nvim-treesitter/nvim-treesitter/issues/7840
+      indent = { enable = false, disable = { 'ruby' } },
       incremental_selection = { enable = true },
       textobjects = {
         select = {
