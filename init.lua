@@ -801,6 +801,7 @@ require('lazy').setup({
         },
         docker_compose_language_service = {},
         dockerls = {},
+        harper_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
