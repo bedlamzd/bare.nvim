@@ -14,5 +14,6 @@ source:
     - mdformat-frontmatter
     - mdformat-footnote
     - mdformat-gfm-alerts
+    - mdformat-tables
 bin:
   mdformat: pypi:mdformat
