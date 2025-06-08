@@ -1028,6 +1028,13 @@ require('lazy').setup({
               end,
             },
           },
+          cmdline = {
+            -- WARN: There's an issue that on WSL path has windows part
+            --  which messes with blink. So on WSL I disabled command completion
+            enabled = vim.fn.has 'wsl' and function()
+              return vim.fn.getcmdline():sub(1, 1) ~= '!'
+            end or true,
+          },
         },
       },
 
