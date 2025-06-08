@@ -1020,6 +1020,14 @@ require('lazy').setup({
         default = { 'lsp', 'snippets', 'buffer', 'path', 'lazydev' },
         providers = {
           lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+          path = {
+            opts = {
+              show_hidden_files_by_default = true,
+              get_cwd = function(_)
+                return vim.fn.getcwd()
+              end,
+            },
+          },
         },
       },
 
