@@ -747,11 +747,13 @@ require('lazy').setup({
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-      -- NOTE: should be using 'ufo' plugin for that
-      capabilities.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-      }
+      local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
+      if is_ufo_enabled then
+        capabilities.textDocument.foldingRange = {
+          dynamicRegistration = false,
+          lineFoldingOnly = true,
+        }
+      end
 
       ---@return fun(): [string, string]? schemas_iterator Over pairs of (schema_path, glob_pattern)
       local k8s_schemas = function()
@@ -1197,24 +1199,6 @@ require('lazy').setup({
       max_lines = vim.o.scrolloff, -- this space isn't used anyway, so let's make it useful
       multiline_threshold = 2,
     },
-  },
-  {
-    'kevinhwang91/nvim-ufo',
-    dependencies = { 'kevinhwang91/promise-async' },
-    init = function(_)
-      vim.opt.foldcolumn = '1'
-      vim.opt.foldlevel = 99
-      vim.opt.foldlevelstart = 99
-      vim.opt.foldenable = true
-    end,
-    config = function(_, opts)
-      local ufo = require 'ufo'
-      vim.keymap.set('n', 'zR', ufo.openAllFolds)
-      vim.keymap.set('n', 'zM', ufo.closeAllFolds)
-      -- vim.keymap.set('n', 'zr', ufo.openFoldsExceptKinds)
-      -- vim.keymap.set('n', 'zm', ufo.closeFoldsWith)
-      ufo.setup(opts)
-    end,
   },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
