@@ -759,7 +759,6 @@ require('lazy').setup({
       local k8s_schemas = function()
         local schemas_dir = vim.fs.abspath(vim.fn.stdpath 'data' .. '/../k8s-schemas')
         schemas_dir = vim.fs.normalize(schemas_dir)
-        vim.notify(schemas_dir)
         if not vim.fn.isdirectory(schemas_dir) then
           -- empty iterator
           return function() end
