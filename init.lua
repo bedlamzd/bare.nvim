@@ -1050,13 +1050,6 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter-textobjects',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
   },
-  {
-    'nvim-treesitter/nvim-treesitter-context',
-    opts = {
-      max_lines = vim.o.scrolloff, -- this space isn't used anyway, so let's make it useful
-      multiline_threshold = 2,
-    },
-  },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
