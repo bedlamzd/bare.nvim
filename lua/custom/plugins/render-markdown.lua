@@ -7,5 +7,6 @@ return {
     completions = {
       blink = { enabled = true },
     },
+    win_options = { conceallevel = { rendered = 2 } },
   },
 }
