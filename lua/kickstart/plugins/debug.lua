@@ -117,8 +117,7 @@ return {
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
-    local debugpy_pkg = require('mason-registry').get_package 'debugpy'
-    local debugpy_venv_python = debugpy_pkg:get_install_path() .. '/venv/bin/python'
+    local debugpy_venv_python = vim.fn.expand '$MASON/packages/debugpy/venv/bin/python'
     require('dap-python').setup(debugpy_venv_python)
   end,
 }

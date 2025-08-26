@@ -7,7 +7,6 @@ return {
     -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
     {
       'mason-org/mason.nvim',
-      version = '^1.0.0',
       opts = {
         registries = {
           'file:' .. vim.fn.stdpath 'config' .. '/mason-registry-override',
@@ -15,7 +14,7 @@ return {
         },
       },
     },
-    { 'mason-org/mason-lspconfig.nvim', version = '^1.0.0' },
+    { 'mason-org/mason-lspconfig.nvim' },
     'WhoIsSethDaniel/mason-tool-installer.nvim',
 
     -- Useful status updates for LSP.
