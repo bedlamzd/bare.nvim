@@ -92,12 +92,14 @@ vim.o.scrolloff = 5
 vim.o.confirm = true
 
 -- Наконец-то не нужно переключать раскладку в нормальном режиме
--- FIXME: messes with neotree in ENG layout - cannot set root for example
+-- NOTE: . и , нельзя ремапить таким образом, так как это применяется
+--  на всех раскладках (ru и eng). Из-за этого neo-tree не может переключить рут.
+--  Ещё это не работает с which-key и command-mode
 vim.opt.langmap = {
   'ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ',
   'фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz',
-  "хъжэбю.;[]\\;'\\,./",
-  'ХЪЖЭБЮ\\,;{}:\\"<>?',
+  "хъжэбю;[]\\;'\\,.",
+  'ХЪЖЭБЮ;{}:\\"<>',
   'ёЁ;`~',
 }
 
