@@ -69,4 +69,28 @@ return { -- Highlight, edit, and navigate code
   --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
   --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
   --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  keys = {
+    {
+      -- For a given variable, will peek its definition
+      'gpd',
+      function()
+        local ts_interop = require 'nvim-treesitter.textobjects.lsp_interop'
+        ts_interop.peek_definition_code('@block.outer', 'textobjects', vim.lsp.protocol.Methods.textDocument_definition)
+      end,
+      desc = '[P]eek [D]efinition',
+    },
+    {
+      -- For a given variable, will peek its type, if available, or its definition
+      -- (though depends on server I guess) doesn't work with vaiables
+      -- referencing functions (basedpyright at least), though. Seems like
+      -- they have type (hover shows signature), but are missing where it's
+      -- defined - typeDefinition returns nothing for them
+      'gpt',
+      function()
+        local ts_interop = require 'nvim-treesitter.textobjects.lsp_interop'
+        ts_interop.peek_definition_code('@block.outer', 'textobjects', vim.lsp.protocol.Methods.textDocument_typeDefinition)
+      end,
+      desc = '[P]eek [T]ype definition',
+    },
+  },
 }
