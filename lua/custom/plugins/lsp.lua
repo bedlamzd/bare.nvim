@@ -33,6 +33,30 @@ local k8s_schemas = function()
   end)
 end
 
+---@type lsp.ClientCapabilities?
+local _lsp_capabilities
+
+-- LSP servers and clients are able to communicate to each other what features they support.
+--  By default, Neovim doesn't support everything that is in the LSP specification.
+--  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
+--  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
+---@return lsp.ClientCapabilities
+local get_lsp_capabilities = function()
+  if _lsp_capabilities ~= nil then
+    return _lsp_capabilities
+  end
+  local capabilities = require('blink.cmp').get_lsp_capabilities()
+  local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
+  if is_ufo_enabled then
+    capabilities.textDocument.foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true,
+    }
+  end
+  _lsp_capabilities = capabilities
+  return capabilities
+end
+
 return {
   -- Main LSP Configuration
   'neovim/nvim-lspconfig',
@@ -230,19 +254,6 @@ return {
       },
     }
 
-    -- LSP servers and clients are able to communicate to each other what features they support.
-    --  By default, Neovim doesn't support everything that is in the LSP specification.
-    --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
-    --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-    local capabilities = require('blink.cmp').get_lsp_capabilities()
-    local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
-    if is_ufo_enabled then
-      capabilities.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-      }
-    end
-
     -- Enable the following language servers
     --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
     --
@@ -361,7 +372,7 @@ return {
           -- This handles overriding only values explicitly passed
           -- by the server configuration above. Useful when disabling
           -- certain features of an LSP (for example, turning off formatting for ts_ls)
-          server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+          server.capabilities = vim.tbl_deep_extend('force', {}, get_lsp_capabilities(), server.capabilities or {})
           require('lspconfig')[server_name].setup(server)
         end,
       },
