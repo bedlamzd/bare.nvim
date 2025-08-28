@@ -217,20 +217,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end,
       })
     end
-
-    -- The following code creates a keymap to toggle inlay hints in your
-    -- code, if the language server you are using supports them
-    --
-    -- This may be unwanted, since they displace some of your code
-    -- TODO: No need to ask lsps if they support it. First of all this is either per buffer or global,
-    --  so, cannot specify which lsp to turn it on for. Second, this won't error if lsp doesn't support it.
-    --  This is just a setting on a bufffer, that's it
-    -- TODO: Move to a separate keymap config
-    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-      map('<leader>th', function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-      end, '[T]oggle Inlay [H]ints')
-    end
   end,
 })
 
@@ -302,6 +288,15 @@ return {
         server.capabilities = vim.tbl_deep_extend('force', {}, get_lsp_capabilities(), server.capabilities or {})
         require('lspconfig')[server_name].setup(server)
       end,
+    },
+  },
+  keys = {
+    {
+      '<leader>th',
+      function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      end,
+      desc = '[T]oggle Inlay [H]ints',
     },
   },
 }
