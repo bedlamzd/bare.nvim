@@ -51,5 +51,12 @@ return {
         require('ufo').closeAllFolds()
       end,
     },
+    {
+      '<C-P>f',
+      function()
+        require('ufo').peekFoldedLinesUnderCursor()
+      end,
+      desc = '[P]eek [f]old',
+    },
   },
 }
