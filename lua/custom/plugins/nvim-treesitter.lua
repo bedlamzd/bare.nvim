@@ -75,7 +75,7 @@ return { -- Highlight, edit, and navigate code
   keys = {
     {
       -- For a given variable, will peek its definition
-      'gpd',
+      '<leader>pd',
       function()
         local ts_interop = require 'nvim-treesitter.textobjects.lsp_interop'
         ts_interop.peek_definition_code('@block.outer', 'textobjects', vim.lsp.protocol.Methods.textDocument_definition)
@@ -88,7 +88,7 @@ return { -- Highlight, edit, and navigate code
       -- referencing functions (basedpyright at least), though. Seems like
       -- they have type (hover shows signature), but are missing where it's
       -- defined - typeDefinition returns nothing for them
-      'gpt',
+      '<leader>pt',
       function()
         local ts_interop = require 'nvim-treesitter.textobjects.lsp_interop'
         ts_interop.peek_definition_code('@block.outer', 'textobjects', vim.lsp.protocol.Methods.textDocument_typeDefinition)

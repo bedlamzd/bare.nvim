@@ -52,7 +52,7 @@ return {
       end,
     },
     {
-      '<C-P>f',
+      '<leader>pf',
       function()
         require('ufo').peekFoldedLinesUnderCursor()
       end,
