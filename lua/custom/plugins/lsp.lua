@@ -57,6 +57,79 @@ local get_lsp_capabilities = function()
   return capabilities
 end
 
+local servers = {
+  -- clangd = {},
+  -- gopls = {},
+  basedpyright = {
+    settings = {
+      basedpyright = {
+        disableOrganizeImports = true,
+        analysis = {
+          diagnosticMode = 'workspace',
+        },
+      },
+    },
+  },
+  -- rust_analyzer = {},
+  -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
+  --
+  -- Some languages (like typescript) have entire language plugins that can be useful:
+  --    https://github.com/pmizio/typescript-tools.nvim
+  --
+  -- But for many setups, the LSP (`ts_ls`) will work just fine
+  -- ts_ls = {},
+  --
+
+  lua_ls = {
+    -- cmd = { ... },
+    -- filetypes = { ... },
+    -- capabilities = {},
+    settings = {
+      Lua = {
+        completion = {
+          callSnippet = 'Replace',
+        },
+        -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+        -- diagnostics = { disable = { 'missing-fields' } },
+      },
+    },
+  },
+  docker_compose_language_service = {},
+  dockerls = {},
+  harper_ls = {
+    settings = {
+      ['harper-ls'] = {
+        linters = { SentenceCapitalization = false },
+      },
+    },
+  },
+  yamlls = {
+    settings = {
+      yaml = {
+        -- WARN: kubernetes support will be removed eventually https://github.com/redhat-developer/yaml-language-server/issues/307
+        -- NOTE: When names are not standard, a magic comment can be added
+        --  see https://github.com/redhat-developer/yaml-language-server?tab=readme-ov-file#using-inlined-schema
+        --  CRD lists
+        --    - https://github.com/fluxcd-community/flux2-schemas
+        --    - https://github.com/instrumenta/kubernetes-json-schema
+        --  How to get used schemas from cluster
+        --    - https://github.com/redhat-developer/yaml-language-server/issues/132#issuecomment-1403851309
+        schemas = vim.iter(k8s_schemas()):fold({}, function(acc, v)
+          acc[v[1]] = v[2]
+          return acc
+        end),
+      },
+    },
+  },
+  markdown_oxide = {
+    workspace = {
+      didChangeWatchedFiles = {
+        dynamicRegistration = true,
+      },
+    },
+  },
+}
+
 return {
   -- Main LSP Configuration
   'neovim/nvim-lspconfig',
@@ -263,78 +336,6 @@ return {
     --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
     --  - settings (table): Override the default settings passed when initializing the server.
     --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
-    local servers = {
-      -- clangd = {},
-      -- gopls = {},
-      basedpyright = {
-        settings = {
-          basedpyright = {
-            disableOrganizeImports = true,
-            analysis = {
-              diagnosticMode = 'workspace',
-            },
-          },
-        },
-      },
-      -- rust_analyzer = {},
-      -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
-      --
-      -- Some languages (like typescript) have entire language plugins that can be useful:
-      --    https://github.com/pmizio/typescript-tools.nvim
-      --
-      -- But for many setups, the LSP (`ts_ls`) will work just fine
-      -- ts_ls = {},
-      --
-
-      lua_ls = {
-        -- cmd = { ... },
-        -- filetypes = { ... },
-        -- capabilities = {},
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = 'Replace',
-            },
-            -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            -- diagnostics = { disable = { 'missing-fields' } },
-          },
-        },
-      },
-      docker_compose_language_service = {},
-      dockerls = {},
-      harper_ls = {
-        settings = {
-          ['harper-ls'] = {
-            linters = { SentenceCapitalization = false },
-          },
-        },
-      },
-      yamlls = {
-        settings = {
-          yaml = {
-            -- WARN: kubernetes support will be removed eventually https://github.com/redhat-developer/yaml-language-server/issues/307
-            -- NOTE: When names are not standard, a magic comment can be added
-            --  see https://github.com/redhat-developer/yaml-language-server?tab=readme-ov-file#using-inlined-schema
-            --  CRD lists
-            --    - https://github.com/fluxcd-community/flux2-schemas
-            --    - https://github.com/instrumenta/kubernetes-json-schema
-            --  How to get used schemas from cluster
-            --    - https://github.com/redhat-developer/yaml-language-server/issues/132#issuecomment-1403851309
-            schemas = vim.iter(k8s_schemas()):fold({}, function(acc, v)
-              acc[v[1]] = v[2]
-              return acc
-            end),
-          },
-        },
-      },
-      markdown_oxide = {
-        workspace = {
-          didChangeWatchedFiles = {
-            dynamicRegistration = true,
-          },
-        },
-      },
-    }
 
     -- Ensure the servers and tools above are installed
     --
