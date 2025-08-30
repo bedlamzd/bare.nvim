@@ -34,7 +34,7 @@ return { -- Autoformat
       python = { 'ruff_format' },
       yaml = { 'yamlfmt' },
       sql = { 'sqlfmt' },
-      markdown = { 'cbfmt', 'mdformat' },
+      markdown = { 'injected', 'mdformat' },
       json = { 'jq' },
       jsonc = { 'jq' },
       --
