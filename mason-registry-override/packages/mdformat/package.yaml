@@ -15,5 +15,6 @@ source:
     - mdformat-footnote
     - mdformat-gfm-alerts
     - mdformat-tables
+    - git+https://github.com/bedlamzd/mdformat-wikilink
 bin:
   mdformat: pypi:mdformat
