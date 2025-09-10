@@ -11,16 +11,14 @@ return {
     preview_win = {
       preview_method = 'load',
     },
+    keymaps = {
+      ['\\'] = { 'actions.close', mode = 'n' },
+    },
   },
+  cmd = 'Oil',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   lazy = false,
   keys = {
-    {
-      '\\',
-      function()
-        require('oil').toggle_float()
-      end,
-      desc = 'Oil float',
-    },
+    { '\\', ':Oil<CR>', desc = 'Oil file explorer' },
   },
 }
