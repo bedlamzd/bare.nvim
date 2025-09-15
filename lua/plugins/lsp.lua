@@ -80,24 +80,48 @@ local servers = {
       },
     },
   },
-  yamlls = {
-    settings = {
-      yaml = {
-        -- WARN: kubernetes support will be removed eventually https://github.com/redhat-developer/yaml-language-server/issues/307
-        -- NOTE: When names are not standard, a magic comment can be added
-        --  see https://github.com/redhat-developer/yaml-language-server?tab=readme-ov-file#using-inlined-schema
-        --  CRD lists
-        --    - https://github.com/fluxcd-community/flux2-schemas
-        --    - https://github.com/instrumenta/kubernetes-json-schema
-        --  How to get used schemas from cluster
-        --    - https://github.com/redhat-developer/yaml-language-server/issues/132#issuecomment-1403851309
-        schemas = vim.iter(k8s_schemas()):fold({}, function(acc, v)
-          acc[v[1]] = v[2]
-          return acc
-        end),
+  yamlls = function()
+    return {
+      settings = {
+        yaml = {
+          -- WARN: kubernetes support will be removed eventually https://github.com/redhat-developer/yaml-language-server/issues/307
+          -- NOTE: When names are not standard, a magic comment can be added
+          --  see https://github.com/redhat-developer/yaml-language-server?tab=readme-ov-file#using-inlined-schema
+          --  CRD lists
+          --    - https://www.schemastore.org/
+          --    - https://github.com/fluxcd-community/flux2-schemas
+          --    - https://github.com/instrumenta/kubernetes-json-schema
+          --    - https://github.com/datreeio/CRDs-catalog
+          --  How to get used schemas from cluster
+          --    - https://github.com/redhat-developer/yaml-language-server/issues/132#issuecomment-1403851309
+          --    - https://github.com/datreeio/CRDs-catalog?tab=readme-ov-file#crd-extractor
+          validate = true,
+          schemaStore = { enable = false, url = '' },
+          schemas = require('schemastore').yaml.schemas {
+            extra = vim.iter(k8s_schemas()):fold({}, function(acc, v)
+              schema_path, pattern = unpack(v)
+              acc[#acc + 1] = {
+                fileMatch = pattern,
+                name = vim.fs.basename(schema_path),
+                url = 'file://' .. schema_path,
+              }
+              return acc
+            end),
+          },
+        },
       },
-    },
-  },
+    }
+  end,
+  jsonls = function()
+    return {
+      settings = {
+        json = {
+          validate = true,
+          schemas = require('schemastore').json.schemas(),
+        },
+      },
+    }
+  end,
   markdown_oxide = {
     workspace = {
       didChangeWatchedFiles = {
@@ -233,6 +257,7 @@ return {
   end,
   dependencies = {
     'mason-org/mason.nvim',
+    'b0o/schemastore.nvim',
     {
       'neovim/nvim-lspconfig',
       config = function()
