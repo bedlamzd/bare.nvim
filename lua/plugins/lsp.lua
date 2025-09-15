@@ -33,18 +33,12 @@ local k8s_schemas = function()
   end)
 end
 
----@type lsp.ClientCapabilities?
-local _lsp_capabilities
-
 -- LSP servers and clients are able to communicate to each other what features they support.
 --  By default, Neovim doesn't support everything that is in the LSP specification.
 --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
 --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
 ---@return lsp.ClientCapabilities
 local get_lsp_capabilities = function()
-  if _lsp_capabilities ~= nil then
-    return _lsp_capabilities
-  end
   local capabilities = require('blink.cmp').get_lsp_capabilities()
   local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
   if is_ufo_enabled then
@@ -53,7 +47,6 @@ local get_lsp_capabilities = function()
       lineFoldingOnly = true,
     }
   end
-  _lsp_capabilities = capabilities
   return capabilities
 end
 
@@ -113,6 +106,7 @@ local servers = {
     },
   },
 }
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
   callback = function(event)
@@ -239,7 +233,23 @@ return {
   end,
   dependencies = {
     'mason-org/mason.nvim',
-    'neovim/nvim-lspconfig',
+    {
+      'neovim/nvim-lspconfig',
+      config = function()
+        local blink_lsp_capabilities = get_lsp_capabilities()
+
+        for server_name, server_config in pairs(servers) do
+          if vim.is_callable(server_config) then
+            server_config = server_config()
+          else
+            vim.validate('server_config', server_config, 'table', true, server_name .. ' config is not a callable and not a table!')
+          end
+
+          server_config.capabilities = vim.tbl_deep_extend('force', {}, blink_lsp_capabilities, server_config.capabilities or {})
+          require('lspconfig')[server_name].setup(server_config)
+        end
+      end,
+    },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
@@ -263,16 +273,6 @@ return {
   opts = {
     ensure_installed = {}, -- explicitly set to an empty table (use mason-tool-installer)
     automatic_installation = false,
-    handlers = {
-      function(server_name)
-        local server = servers[server_name] or {}
-        -- This handles overriding only values explicitly passed
-        -- by the server configuration above. Useful when disabling
-        -- certain features of an LSP (for example, turning off formatting for ts_ls)
-        server.capabilities = vim.tbl_deep_extend('force', {}, get_lsp_capabilities(), server.capabilities or {})
-        require('lspconfig')[server_name].setup(server)
-      end,
-    },
   },
   keys = {
     {
