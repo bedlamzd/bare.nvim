@@ -9,6 +9,7 @@
   "guess-indent.nvim": { "branch": "main", "commit": "84a4987ff36798c2fc1169cbaff67960aed9776f" },
   "helm-ls.nvim": { "branch": "main", "commit": "648509594281eed48e58bb690744b082c1eeb741" },
   "image.nvim": { "branch": "master", "commit": "a8d6829ce8472a79df140bc494e75f1847f8861e" },
+  "kulala.nvim": { "branch": "main", "commit": "ab3effad17d5dbb4d5d34b6289fa4dc97155045c" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
   "lazydev.nvim": { "branch": "main", "commit": "2367a6c0a01eb9edb0464731cc0fb61ed9ab9d2c" },
   "markdown-preview.nvim": { "branch": "master", "commit": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee" },
