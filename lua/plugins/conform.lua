@@ -32,7 +32,7 @@ return { -- Autoformat
       lua = { 'stylua' },
       -- Conform can also run multiple formatters sequentially
       python = { 'ruff_format' },
-      yaml = { 'yamlfmt' },
+      yaml = { 'injected', 'yamlfmt' },
       sql = { 'sqlfmt' },
       markdown = { 'injected', 'mdformat' },
       json = { 'jq' },
