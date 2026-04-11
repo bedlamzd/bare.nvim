@@ -1,16 +1,3 @@
--- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
----@param client vim.lsp.Client
----@param method vim.lsp.protocol.Method
----@param bufnr? integer some lsp support methods only in specific files
----@return boolean
-local function client_supports_method(client, method, bufnr)
-  if vim.fn.has 'nvim-0.11' == 1 then
-    return client:supports_method(method, bufnr)
-  else
-    return client.supports_method(method, { bufnr = bufnr })
-  end
-end
-
 ---@return fun(): [string, string]? schemas_iterator Over pairs of (schema_path, glob_pattern)
 local k8s_schemas = function()
   local schemas_dir = vim.fs.abspath(vim.fn.stdpath 'data' .. '/../k8s-schemas')
@@ -23,9 +10,7 @@ local k8s_schemas = function()
 
   return coroutine.wrap(function()
     for name, type in schemas do
-      if type ~= 'file' or name == '_definitions.json' then
-        goto continue
-      end
+      if type ~= 'file' or name == '_definitions.json' then goto continue end
       local pattern = string.gsub(vim.fs.basename(name), '^(.*)%.json', '%1.yaml')
       coroutine.yield { vim.fs.joinpath(schemas_dir, name), pattern }
       ::continue::
@@ -40,13 +25,13 @@ end
 ---@return lsp.ClientCapabilities
 local get_lsp_capabilities = function()
   local capabilities = require('blink.cmp').get_lsp_capabilities()
+  -- TODO: since this is unused + neovim 0.11 has folding range builtin
+  --  ufo part has to be adapted somehow
   local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
-  if is_ufo_enabled then
-    capabilities.textDocument.foldingRange = {
-      dynamicRegistration = false,
-      lineFoldingOnly = true,
-    }
-  end
+  if is_ufo_enabled then capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true,
+  } end
   return capabilities
 end
 
@@ -63,12 +48,30 @@ local servers = {
     },
   },
   lua_ls = {
-    settings = {
-      Lua = {
-        completion = {
-          callSnippet = 'Replace',
+    on_init = function(client)
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
+      end
+
+      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        runtime = {
+          version = 'LuaJIT',
+          path = { 'lua/?.lua', 'lua/?/init.lua' },
         },
-      },
+        workspace = {
+          checkThirdParty = false,
+          -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
+          --  See https://github.com/neovim/nvim-lspconfig/issues/3189
+          library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+            '${3rd}/luv/library',
+            '${3rd}/busted/library',
+          }),
+        },
+      })
+    end,
+    settings = {
+      Lua = {},
     },
   },
   docker_compose_language_service = nil,
@@ -157,39 +160,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- or a suggestion from your LSP for this to activate.
     map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
-    -- Find references for the word under your cursor.
-    map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-    -- Jump to the implementation of the word under your cursor.
-    --  Useful when your language has ways of declaring types without an actual implementation.
-    -- TODO: Make this global. This will shadow default "go to definition" and it's fine
-    map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-
-    -- Jump to the definition of the word under your cursor.
-    --  This is where a variable was first declared, or where a function is defined, etc.
-    --  To jump back, press <C-t>.
-    map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
     -- WARN: This is not Goto Definition, this is Goto Declaration.
     --  For example, in C this would take you to the header.
     map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
-    -- Fuzzy find all the symbols in your current document.
-    --  Symbols are things like variables, functions, types, etc.
-    map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
-
-    -- Fuzzy find all the symbols in your current workspace.
-    --  Similar to document symbols, except searches over your entire project.
-    -- TODO: Make this global. If lsp is attached, I want to see symbols for it even if I'm in a buffer not related to this lsp
-    -- TODO: If possible, detect workspace project before opening any file and enable this keymap
-    -- TODO: Specialize by funcs, classes and variables
-    map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
-
-    -- Jump to the type of the word under your cursor.
-    --  Useful when you're not sure what type a variable is and you want to see
-    --  the definition of its *type*, not where it was *defined*.
-    -- TODO: Make this global. This will shadow default "go to definition" and it's fine
-    map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
     -- The following two autocommands are used to highlight references of the
     -- word under your cursor when your cursor rests there for a little while.
@@ -197,7 +170,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --
     -- When you move your cursor, the highlights will be cleared (the second autocommand).
     local client = vim.lsp.get_client_by_id(event.data.client_id)
-    if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+    if client and client:supports_method('textDocument/documentHighlight', event.buf) then
       local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = event.buf,
@@ -222,59 +195,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+---@module 'lazy'
+---@type LazySpec
 return {
-  -- Main LSP Configuration
-  'mason-org/mason-lspconfig.nvim',
-  init = function()
-    -- Diagnostic Config
-    -- See :help vim.diagnostic.Opts
-    vim.diagnostic.config {
-      severity_sort = true,
-      float = { border = 'rounded', source = 'if_many' },
-      underline = { severity = vim.diagnostic.severity.ERROR },
-      signs = vim.g.have_nerd_font and {
-        text = {
-          [vim.diagnostic.severity.ERROR] = '󰅚 ',
-          [vim.diagnostic.severity.WARN] = '󰀪 ',
-          [vim.diagnostic.severity.INFO] = '󰋽 ',
-          [vim.diagnostic.severity.HINT] = '󰌶 ',
-        },
-      } or {},
-      virtual_text = {
-        source = 'if_many',
-        spacing = 2,
-        format = function(diagnostic)
-          local diagnostic_message = {
-            [vim.diagnostic.severity.ERROR] = diagnostic.message,
-            [vim.diagnostic.severity.WARN] = diagnostic.message,
-            [vim.diagnostic.severity.INFO] = diagnostic.message,
-            [vim.diagnostic.severity.HINT] = diagnostic.message,
-          }
-          return diagnostic_message[diagnostic.severity]
-        end,
-      },
-    }
-  end,
+  'neovim/nvim-lspconfig',
   dependencies = {
+    -- NOTE: config for mason is in dedicated file. here I merely state dependency
     'mason-org/mason.nvim',
-    'b0o/schemastore.nvim',
-    {
-      'neovim/nvim-lspconfig',
-      config = function()
-        local blink_lsp_capabilities = get_lsp_capabilities()
-
-        for server_name, server_config in pairs(servers) do
-          if vim.is_callable(server_config) then
-            server_config = server_config()
-          else
-            vim.validate('server_config', server_config, 'table', true, server_name .. ' config is not a callable and not a table!')
-          end
-
-          server_config.capabilities = vim.tbl_deep_extend('force', {}, blink_lsp_capabilities, server_config.capabilities or {})
-          require('lspconfig')[server_name].setup(server_config)
-        end
-      end,
-    },
+    -- NOTE: Maps LSP server names between nvim-lspconfig and Mason package names.
+    -- TODO: delete?
+    'mason-org/mason-lspconfig.nvim',
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
@@ -291,20 +221,21 @@ return {
         }),
       },
     },
+    -- Useful status updates for LSP.
     { 'j-hui/fidget.nvim', opts = {} },
-    'saghen/blink.cmp',
+    -- NOTE: needed for yaml/json schema support in their lsp
+    'b0o/schemastore.nvim',
   },
-  event = 'VimEnter',
-  opts = {
-    ensure_installed = {}, -- explicitly set to an empty table (use mason-tool-installer)
-    automatic_installation = false,
-  },
+  config = function()
+    for name, server in pairs(servers) do
+      vim.lsp.config(name, server)
+      vim.lsp.enable(name)
+    end
+  end,
   keys = {
     {
       '<leader>th',
-      function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-      end,
+      function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
       desc = '[T]oggle Inlay [H]ints',
     },
   },

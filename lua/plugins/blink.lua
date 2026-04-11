@@ -11,9 +11,7 @@ return { -- Autocompletion
         -- Build Step is needed for regex support in snippets.
         -- This step is not supported in many windows environments.
         -- Remove the below condition to re-enable on windows.
-        if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-          return
-        end
+        if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then return end
         return 'make install_jsregexp'
       end)(),
       dependencies = {
@@ -75,23 +73,18 @@ return { -- Autocompletion
     },
 
     sources = {
-      default = { 'lsp', 'snippets', 'buffer', 'path', 'lazydev' },
+      default = { 'lsp', 'snippets', 'buffer', 'path' },
       providers = {
-        lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
         path = {
           opts = {
             show_hidden_files_by_default = true,
-            get_cwd = function(_)
-              return vim.fn.getcwd()
-            end,
+            get_cwd = function(_) return vim.fn.getcwd() end,
           },
         },
         cmdline = {
           -- WARN: There's an issue that on WSL path has windows part
           --  which messes with blink. So on WSL I disabled command completion
-          enabled = vim.fn.has 'wsl' and function()
-            return vim.fn.getcmdline():sub(1, 1) ~= '!'
-          end or true,
+          enabled = vim.fn.has 'wsl' and function() return vim.fn.getcmdline():sub(1, 1) ~= '!' end or true,
         },
       },
     },

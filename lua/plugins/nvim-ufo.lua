@@ -15,12 +15,8 @@ local function customizeSelector(bufnr)
 
   return require('ufo')
     .getFolds(bufnr, 'lsp')
-    :catch(function(err)
-      return handleFallbackException(err, 'treesitter')
-    end)
-    :catch(function(err)
-      return handleFallbackException(err, 'indent')
-    end)
+    :catch(function(err) return handleFallbackException(err, 'treesitter') end)
+    :catch(function(err) return handleFallbackException(err, 'indent') end)
 end
 
 return {
@@ -34,28 +30,20 @@ return {
   end,
   event = 'BufEnter',
   opts = {
-    provider_selector = function(bufnr, filetype, buftype)
-      return ft_fold_provider[filetype] or customizeSelector
-    end,
+    provider_selector = function(bufnr, filetype, buftype) return ft_fold_provider[filetype] or customizeSelector end,
   },
   keys = {
     {
       'zR',
-      function()
-        require('ufo').openAllFolds()
-      end,
+      function() require('ufo').openAllFolds() end,
     },
     {
       'zM',
-      function()
-        require('ufo').closeAllFolds()
-      end,
+      function() require('ufo').closeAllFolds() end,
     },
     {
       '<leader>pf',
-      function()
-        require('ufo').peekFoldedLinesUnderCursor()
-      end,
+      function() require('ufo').peekFoldedLinesUnderCursor() end,
       desc = '[P]eek [f]old',
     },
   },
