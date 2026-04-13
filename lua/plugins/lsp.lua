@@ -61,12 +61,11 @@ local servers = {
         },
         workspace = {
           checkThirdParty = false,
-          -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-          --  See https://github.com/neovim/nvim-lspconfig/issues/3189
-          library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+          library = {
+            vim.env.VIMRUNTIME,
             '${3rd}/luv/library',
             '${3rd}/busted/library',
-          }),
+          },
         },
       })
     end,
