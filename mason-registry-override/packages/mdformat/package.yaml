@@ -1,6 +1,7 @@
+# yaml-language-server: $schema=https://github.com/mason-org/registry-schema/releases/latest/download/package.schema.json
 name: mdformat
 description: CommonMark compliant Markdown formatter.
-homepage: https://github.com/executablebooks/mdformat
+homepage: https://github.com/hukkin/mdformat
 licenses:
   - MIT
 languages:
@@ -8,13 +9,12 @@ languages:
 categories:
   - Formatter
 source:
-  id: pkg:pypi/mdformat@0.7.22
+  id: pkg:pypi/mdformat@1.0.0
   extra_packages:
     - mdformat-gfm
     - mdformat-frontmatter
     - mdformat-footnote
     - mdformat-gfm-alerts
-    - mdformat-tables
     - git+https://github.com/bedlamzd/mdformat-wikilink
 bin:
   mdformat: pypi:mdformat
