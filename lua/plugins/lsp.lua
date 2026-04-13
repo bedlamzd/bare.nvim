@@ -139,6 +139,11 @@ local servers = {
   },
 }
 
+for name, server in pairs(servers) do
+  vim.lsp.config(name, server)
+  vim.lsp.enable(name)
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
   callback = function(event)
@@ -235,12 +240,6 @@ return {
     -- NOTE: needed for yaml/json schema support in their lsp
     'b0o/schemastore.nvim',
   },
-  config = function()
-    for name, server in pairs(servers) do
-      vim.lsp.config(name, server)
-      vim.lsp.enable(name)
-    end
-  end,
   keys = {
     {
       '<leader>th',
