@@ -230,7 +230,6 @@ return {
         ensure_installed = vim.list_extend(vim.tbl_keys(servers or {}), {
           'jq',
           'yamlfmt',
-          'cbfmt',
           'mdformat',
           'sqlfmt',
           'debugpy',
