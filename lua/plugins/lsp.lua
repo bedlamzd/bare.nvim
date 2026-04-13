@@ -18,22 +18,24 @@ local k8s_schemas = function()
   end)
 end
 
--- LSP servers and clients are able to communicate to each other what features they support.
---  By default, Neovim doesn't support everything that is in the LSP specification.
---  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
---  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
----@return lsp.ClientCapabilities
-local get_lsp_capabilities = function()
-  local capabilities = require('blink.cmp').get_lsp_capabilities()
-  -- TODO: since this is unused + neovim 0.11 has folding range builtin
-  --  ufo part has to be adapted somehow
-  local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
-  if is_ufo_enabled then capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true,
-  } end
-  return capabilities
-end
+-- NOTE: ufo plugin compatibility
+--  although not sure if still needed
+vim.lsp.config('*', {
+  before_init = function(init_params, config)
+    local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
+    if is_ufo_enabled then
+      config.capabilities.textDocument.foldingRange = vim.tbl_deep_extend('force', config.capabilities.textDocument.foldingRange, {
+        dynamicRegistration = false,
+        lineFoldingOnly = true,
+      })
+    end
+  end,
+  capabilities = {
+    textDocument = {
+      foldingRange = {},
+    },
+  },
+})
 
 ---@type table<string, table<> | fun(): table>
 local servers = {
