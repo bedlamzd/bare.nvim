@@ -209,7 +209,11 @@ return {
     'mason-org/mason.nvim',
     -- NOTE: Maps LSP server names between nvim-lspconfig and Mason package names.
     -- TODO: delete?
-    'mason-org/mason-lspconfig.nvim',
+    {
+      'mason-org/mason-lspconfig.nvim',
+      ensure_installed = {},
+      automatic_enable = false,
+    },
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
