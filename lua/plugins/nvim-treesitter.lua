@@ -13,6 +13,7 @@ return { -- Highlight, edit, and navigate code
   lazy = false,
   build = ':TSUpdate',
   branch = 'main',
+  commit = '7caec274fd19c12b55902a5b795100d21531391f',
   -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
   config = function()
     -- ensure basic parser are installed
