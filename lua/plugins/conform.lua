@@ -29,7 +29,7 @@ return { -- Autoformat
     formatters_by_ft = {
       lua = { 'stylua' },
       -- Conform can also run multiple formatters sequentially
-      python = { 'injected', 'ruff_format' },
+      python = { 'injected', 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
       yaml = { 'injected', 'yamlfmt' },
       sql = { 'sqlfmt' },
       markdown = { 'injected', 'mdformat' },
