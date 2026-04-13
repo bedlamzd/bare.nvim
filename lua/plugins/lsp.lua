@@ -117,16 +117,19 @@ local servers = {
       },
     },
   },
-  jsonls = function()
-    return {
-      settings = {
-        json = {
-          validate = true,
-          schemas = require('schemastore').json.schemas(),
-        },
+  jsonls = {
+    -- NOTE: defer loading schemas until LS actually needed
+    before_init = function(init_params, config)
+      config.settings.json = vim.tbl_deep_extend('force', config.settings.json, {
+        schemas = require('schemastore').json.schemas(),
+      })
+    end,
+    settings = {
+      json = {
+        validate = true,
       },
-    }
-  end,
+    },
+  },
   markdown_oxide = {
     workspace = {
       didChangeWatchedFiles = {
