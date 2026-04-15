@@ -49,6 +49,7 @@ local servers = {
       },
     },
   },
+  ruff = {},
   lua_ls = {
     before_init = function(init_params, config)
       if init_params.workspaceFolders then
@@ -75,6 +76,7 @@ local servers = {
       Lua = {},
     },
   },
+  stylua = {},
   docker_compose_language_service = {},
   dockerls = {},
   harper_ls = {
@@ -225,8 +227,6 @@ return {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
         ensure_installed = vim.list_extend(vim.tbl_keys(servers or {}), {
-          'stylua', -- Used to format Lua code
-          'ruff',
           'jq',
           'yamlfmt',
           'cbfmt',
