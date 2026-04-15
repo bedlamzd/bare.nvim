@@ -134,6 +134,7 @@ local servers = {
       },
     },
   },
+  tombi = {},
   markdown_oxide = {
     workspace = {
       didChangeWatchedFiles = {
