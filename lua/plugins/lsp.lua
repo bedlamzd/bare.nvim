@@ -37,7 +37,7 @@ vim.lsp.config('*', {
   },
 })
 
----@type table<string, table<> | fun(): table>
+---@type table<string, table>
 local servers = {
   basedpyright = {
     settings = {
@@ -75,8 +75,8 @@ local servers = {
       Lua = {},
     },
   },
-  docker_compose_language_service = nil,
-  dockerls = nil,
+  docker_compose_language_service = {},
+  dockerls = {},
   harper_ls = {
     settings = {
       ['harper-ls'] = {
