@@ -23,6 +23,7 @@ return { -- Highlight, edit, and navigate code
       'diff',
       'html',
       'json',
+      'just',
       'lua',
       'luadoc',
       'markdown',
@@ -33,6 +34,14 @@ return { -- Highlight, edit, and navigate code
       'vim',
       'vimdoc',
       'yaml',
+    }
+    require('nvim-treesitter.parsers').just = {
+      install_info = {
+        branch = 'main',
+        url = 'https://github.com/casey/tree-sitter-just',
+      },
+      maintainers = { '@casey' },
+      tier = 2,
     }
     require('nvim-treesitter').install(parsers)
 
