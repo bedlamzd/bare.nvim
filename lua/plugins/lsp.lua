@@ -208,6 +208,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
         end,
       })
     end
+    if client and client:supports_method('textDocument/inlayHint', event.buf) then
+      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+    end
   end,
 })
 
@@ -242,12 +245,5 @@ return {
     { 'j-hui/fidget.nvim', opts = {} },
     -- NOTE: needed for yaml/json schema support in their lsp
     'b0o/schemastore.nvim',
-  },
-  keys = {
-    {
-      '<leader>th',
-      function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
-      desc = '[T]oggle Inlay [H]ints',
-    },
   },
 }
