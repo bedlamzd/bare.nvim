@@ -142,6 +142,7 @@ local servers = {
       },
     },
   },
+  just = {},
 }
 
 for name, server in pairs(servers) do
