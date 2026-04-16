@@ -21,6 +21,8 @@ return { -- Highlight, edit, and navigate code
       'bash',
       'c',
       'diff',
+      'git_rebase',
+      'gitcommit',
       'html',
       'json',
       'just',
