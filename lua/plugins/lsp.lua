@@ -1,23 +1,3 @@
----@return fun(): [string, string]? schemas_iterator Over pairs of (schema_path, glob_pattern)
-local k8s_schemas = function()
-  local schemas_dir = vim.fs.abspath(vim.fn.stdpath 'data' .. '/../k8s-schemas')
-  schemas_dir = vim.fs.normalize(schemas_dir)
-  if not vim.fn.isdirectory(schemas_dir) then
-    -- empty iterator
-    return function() end
-  end
-  local schemas = vim.fs.dir(schemas_dir, { depth = 1 })
-
-  return coroutine.wrap(function()
-    for name, type in schemas do
-      if type ~= 'file' or name == '_definitions.json' then goto continue end
-      local pattern = string.gsub(vim.fs.basename(name), '^(.*)%.json', '%1.yaml')
-      coroutine.yield { vim.fs.joinpath(schemas_dir, name), pattern }
-      ::continue::
-    end
-  end)
-end
-
 -- NOTE: ufo plugin compatibility
 --  although not sure if still needed
 vim.lsp.config('*', {
@@ -37,129 +17,22 @@ vim.lsp.config('*', {
   },
 })
 
----@type table<string, vim.lsp.Config>
-local servers = {
-  basedpyright = {
-    settings = {
-      basedpyright = {
-        disableOrganizeImports = true,
-        analysis = {
-          diagnosticMode = 'workspace',
-        },
-      },
-    },
-  },
-  ruff = {},
-  lua_ls = {
-    before_init = function(init_params, config)
-      local wf = init_params.workspaceFolders
-      if wf and wf ~= vim.NIL then
-        local path = wf[1].name
-        if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
-      end
-
-      config.settings.Lua = vim.tbl_deep_extend('force', config.settings.Lua, {
-        runtime = {
-          version = 'LuaJIT',
-          path = { 'lua/?.lua', 'lua/?/init.lua' },
-        },
-        workspace = {
-          checkThirdParty = false,
-          library = {
-            vim.env.VIMRUNTIME,
-            '${3rd}/luv/library',
-            '${3rd}/busted/library',
-          },
-        },
-      })
-    end,
-    on_init = function(client)
-      -- Disable formatting (formatting is done by stylua)
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-      client.server_capabilities.documentOnTypeFormattingProvider = nil
-    end,
-    settings = {
-      Lua = {
-        format = {
-          enable = false,
-        },
-      },
-    },
-  },
-  stylua = {}, -- Used to format lua code
-  docker_compose_language_service = {},
-  docker_language_server = {},
-  dockerls = {},
-  harper_ls = {
-    settings = {
-      ['harper-ls'] = {
-        linters = { SentenceCapitalization = false },
-      },
-    },
-  },
-  yamlls = {
-    -- NOTE: defer loading schemas until LS actually needed
-    before_init = function(init_params, config)
-      config.settings.yaml = vim.tbl_deep_extend('force', config.settings.yaml, {
-        schemas = require('schemastore').yaml.schemas {
-          extra = vim.iter(k8s_schemas()):fold({}, function(acc, v)
-            local schema_path, pattern = unpack(v)
-            acc[#acc + 1] = {
-              fileMatch = pattern,
-              name = vim.fs.basename(schema_path),
-              url = 'file://' .. schema_path,
-            }
-            return acc
-          end),
-        },
-      })
-    end,
-    settings = {
-      yaml = {
-        -- WARN: kubernetes support will be removed eventually https://github.com/redhat-developer/yaml-language-server/issues/307
-        -- NOTE: When names are not standard, a magic comment can be added
-        --  see https://github.com/redhat-developer/yaml-language-server?tab=readme-ov-file#using-inlined-schema
-        --  CRD lists
-        --    - https://www.schemastore.org/
-        --    - https://github.com/fluxcd-community/flux2-schemas
-        --    - https://github.com/instrumenta/kubernetes-json-schema
-        --    - https://github.com/datreeio/CRDs-catalog
-        --  How to get used schemas from cluster
-        --    - https://github.com/redhat-developer/yaml-language-server/issues/132#issuecomment-1403851309
-        --    - https://github.com/datreeio/CRDs-catalog?tab=readme-ov-file#crd-extractor
-        validate = true,
-        schemaStore = { enable = false, url = '' },
-      },
-    },
-  },
-  jsonls = {
-    -- NOTE: defer loading schemas until LS actually needed
-    before_init = function(init_params, config)
-      config.settings.json = vim.tbl_deep_extend('force', config.settings.json, {
-        schemas = require('schemastore').json.schemas(),
-      })
-    end,
-    settings = {
-      json = {
-        validate = true,
-      },
-    },
-  },
-  tombi = {},
-  markdown_oxide = {
-    workspace = {
-      didChangeWatchedFiles = {
-        dynamicRegistration = true,
-      },
-    },
-  },
-  just = {},
+local servers_to_enable = {
+  'basedpyright',
+  'bashls',
+  'docker_compose_language_service',
+  'docker_language_server',
+  'dockerls',
+  'harper_ls',
+  'jsonls',
+  'just',
+  'lua_ls',
+  'markdown_oxide',
+  'ruff',
+  'stylua', -- Used to format lua code
+  'tombi',
+  'yamlls',
 }
-
-for name, server in pairs(servers) do
-  vim.lsp.config(name, server)
-end
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -243,7 +116,7 @@ return {
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       opts = {
-        ensure_installed = vim.list_extend(vim.tbl_keys(servers or {}), {
+        ensure_installed = vim.list_extend(servers_to_enable, {
           'jq',
           'yamlfmt',
           'mdformat',
@@ -257,5 +130,5 @@ return {
     -- NOTE: needed for yaml/json schema support in their lsp
     'b0o/schemastore.nvim',
   },
-  config = function() vim.lsp.enable(vim.tbl_keys(servers)) end,
+  config = function() vim.lsp.enable(servers_to_enable) end,
 }
