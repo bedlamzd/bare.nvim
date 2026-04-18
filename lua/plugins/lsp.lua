@@ -73,11 +73,21 @@ local servers = {
         },
       })
     end,
+    on_init = function(client)
+      -- Disable formatting (formatting is done by stylua)
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+      client.server_capabilities.documentOnTypeFormattingProvider = nil
+    end,
     settings = {
-      Lua = {},
+      Lua = {
+        format = {
+          enable = false,
+        },
+      },
     },
   },
-  stylua = {},
+  stylua = {}, -- Used to format lua code
   docker_compose_language_service = {},
   docker_language_server = {},
   dockerls = {},
