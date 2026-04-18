@@ -52,8 +52,9 @@ local servers = {
   ruff = {},
   lua_ls = {
     before_init = function(init_params, config)
-      if init_params.workspaceFolders then
-        local path = init_params.workspaceFolders[1].name
+      local wf = init_params.workspaceFolders
+      if wf and wf ~= vim.NIL then
+        local path = wf[1].name
         if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
       end
 
