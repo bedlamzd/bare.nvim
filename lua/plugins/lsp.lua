@@ -78,6 +78,7 @@ local servers = {
   },
   stylua = {},
   docker_compose_language_service = {},
+  docker_language_server = {},
   dockerls = {},
   harper_ls = {
     settings = {
