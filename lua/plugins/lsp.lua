@@ -237,7 +237,6 @@ return {
           'mdformat',
           'sqlfmt',
           'debugpy',
-          'markdown-oxide',
         }),
       },
     },
