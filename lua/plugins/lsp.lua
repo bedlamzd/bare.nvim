@@ -149,7 +149,6 @@ local servers = {
 
 for name, server in pairs(servers) do
   vim.lsp.config(name, server)
-  vim.lsp.enable(name)
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -220,6 +219,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 ---@type LazySpec
 return {
   'neovim/nvim-lspconfig',
+  lazy = false,
   dependencies = {
     -- NOTE: config for mason is in dedicated file. here I merely state dependency
     'mason-org/mason.nvim',
@@ -247,4 +247,5 @@ return {
     -- NOTE: needed for yaml/json schema support in their lsp
     'b0o/schemastore.nvim',
   },
+  config = function() vim.lsp.enable(vim.tbl_keys(servers)) end,
 }
