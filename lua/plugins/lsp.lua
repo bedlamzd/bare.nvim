@@ -37,7 +37,7 @@ vim.lsp.config('*', {
   },
 })
 
----@type table<string, table>
+---@type table<string, vim.lsp.Config>
 local servers = {
   basedpyright = {
     settings = {
