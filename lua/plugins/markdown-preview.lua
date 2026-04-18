@@ -14,7 +14,5 @@ return {
       desc = 'Markdown Preview',
     },
   },
-  config = function()
-    vim.cmd [[do FileType]]
-  end,
+  config = function() vim.cmd [[do FileType]] end,
 }

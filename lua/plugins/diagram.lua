@@ -15,9 +15,7 @@ return {
   keys = {
     {
       '<leader>pi',
-      function()
-        require('diagram').show_diagram_hover()
-      end,
+      function() require('diagram').show_diagram_hover() end,
       mode = 'n',
       ft = { 'markdown' },
       desc = 'Show diagram in new tab',
