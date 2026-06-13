@@ -121,6 +121,7 @@ return {
           'yamlfmt',
           'mdformat',
           'sqlfmt',
+          'sqlfluff',
           'debugpy',
         }),
       },

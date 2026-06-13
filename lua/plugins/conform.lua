@@ -15,7 +15,13 @@ return { -- Autoformat
   ---@module 'conform'
   ---@type conform.setupOpts
   opts = {
-    notify_on_error = false,
+    notify_on_error = true,
+    formatters = {
+      sqlfluff = {
+        require_cwd = false,
+        exit_codes = {0, 1},
+      },
+    },
     format_on_save = function(bufnr)
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
@@ -33,7 +39,7 @@ return { -- Autoformat
       -- Conform can also run multiple formatters sequentially
       python = { 'injected', 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
       yaml = { 'injected', 'yamlfmt' },
-      sql = { 'sqlfmt' },
+      sql = { 'sqlfluff' },
       markdown = { 'injected', 'mdformat' },
       json = { 'jq' },
       jsonc = { 'jq' },
