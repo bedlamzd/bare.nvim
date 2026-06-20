@@ -4,7 +4,12 @@ return {
     local wf = init_params.workspaceFolders
     if wf and wf ~= vim.NIL then
       local path = wf[1].name
-      if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
+      if
+        path ~= vim.fn.stdpath 'config'
+        and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+      then
+        return
+      end
     end
 
     config.settings.Lua = vim.tbl_deep_extend('force', config.settings.Lua, {

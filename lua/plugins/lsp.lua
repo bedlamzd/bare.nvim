@@ -4,10 +4,11 @@ vim.lsp.config('*', {
   before_init = function(init_params, config)
     local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
     if is_ufo_enabled then
-      config.capabilities.textDocument.foldingRange = vim.tbl_deep_extend('force', config.capabilities.textDocument.foldingRange, {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-      })
+      config.capabilities.textDocument.foldingRange =
+        vim.tbl_deep_extend('force', config.capabilities.textDocument.foldingRange, {
+          dynamicRegistration = false,
+          lineFoldingOnly = true,
+        })
     end
   end,
   capabilities = {
@@ -48,7 +49,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     map('K', function(config)
-      config = vim.tbl_extend('force', { border = 'single', wrap = false, relative = false }, config or {})
+      config =
+        vim.tbl_extend('force', { border = 'single', wrap = false, relative = false }, config or {})
       vim.lsp.buf.hover(config)
     end, 'Hover')
 
@@ -71,7 +73,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- When you move your cursor, the highlights will be cleared (the second autocommand).
     local client = vim.lsp.get_client_by_id(event.data.client_id)
     if client and client:supports_method('textDocument/documentHighlight', event.buf) then
-      local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+      local highlight_augroup =
+        vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = event.buf,
         group = highlight_augroup,
@@ -93,7 +96,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
       })
     end
     if client and client:supports_method('textDocument/inlayHint', event.buf) then
-      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+      map(
+        '<leader>th',
+        function()
+          vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+        end,
+        '[T]oggle Inlay [H]ints'
+      )
     end
   end,
 })

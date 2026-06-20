@@ -19,7 +19,7 @@ return { -- Autoformat
     formatters = {
       sqlfluff = {
         require_cwd = false,
-        exit_codes = {0, 1},
+        exit_codes = { 0, 1 },
       },
     },
     format_on_save = function(bufnr)

@@ -30,7 +30,9 @@ return {
   end,
   event = 'BufEnter',
   opts = {
-    provider_selector = function(bufnr, filetype, buftype) return ft_fold_provider[filetype] or customizeSelector end,
+    provider_selector = function(bufnr, filetype, buftype)
+      return ft_fold_provider[filetype] or customizeSelector
+    end,
   },
   keys = {
     {

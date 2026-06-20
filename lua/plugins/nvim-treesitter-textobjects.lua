@@ -40,19 +40,79 @@ return {
   },
   keys = {
     -- NOTE: select
-    { 'af', function() ts_select().select_textobject('@function.outer', 'textobjects') end, mode = { 'x', 'o' }, desc = 'Select [A]round [F]unciton' },
-    { 'if', function() ts_select().select_textobject('@function.inner', 'textobjects') end, mode = { 'x', 'o' }, desc = 'Select [I]nside [F]unciton' },
-    { 'ac', function() ts_select().select_textobject('@class.outer', 'textobjects') end, mode = { 'x', 'o' }, desc = 'Select [A]round [C]lass' },
-    { 'ic', function() ts_select().select_textobject('@class.inner', 'textobjects') end, mode = { 'x', 'o' }, desc = 'Select [I]nside [C]lass' },
+    {
+      'af',
+      function() ts_select().select_textobject('@function.outer', 'textobjects') end,
+      mode = { 'x', 'o' },
+      desc = 'Select [A]round [F]unciton',
+    },
+    {
+      'if',
+      function() ts_select().select_textobject('@function.inner', 'textobjects') end,
+      mode = { 'x', 'o' },
+      desc = 'Select [I]nside [F]unciton',
+    },
+    {
+      'ac',
+      function() ts_select().select_textobject('@class.outer', 'textobjects') end,
+      mode = { 'x', 'o' },
+      desc = 'Select [A]round [C]lass',
+    },
+    {
+      'ic',
+      function() ts_select().select_textobject('@class.inner', 'textobjects') end,
+      mode = { 'x', 'o' },
+      desc = 'Select [I]nside [C]lass',
+    },
     -- NOTE: move
-    { ']m', function() ts_move().goto_next_start('@function.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Next function start' },
-    { ']]', function() ts_move().goto_next_start('@class.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Next class start' },
-    { ']M', function() ts_move().goto_next_end('@function.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Next function end' },
-    { '][', function() ts_move().goto_next_end('@class.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Next class end' },
-    { '[m', function() ts_move().goto_previous_start('@function.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Previous function start' },
-    { '[[', function() ts_move().goto_previous_start('@class.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Previous class start' },
-    { '[M', function() ts_move().goto_previous_end('@function.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Previous function end' },
-    { '[]', function() ts_move().goto_previous_end('@class.outer', 'textobjects') end, mode = { 'n', 'x', 'o' }, desc = 'Previous class end' },
+    {
+      ']m',
+      function() ts_move().goto_next_start('@function.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Next function start',
+    },
+    {
+      ']]',
+      function() ts_move().goto_next_start('@class.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Next class start',
+    },
+    {
+      ']M',
+      function() ts_move().goto_next_end('@function.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Next function end',
+    },
+    {
+      '][',
+      function() ts_move().goto_next_end('@class.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Next class end',
+    },
+    {
+      '[m',
+      function() ts_move().goto_previous_start('@function.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Previous function start',
+    },
+    {
+      '[[',
+      function() ts_move().goto_previous_start('@class.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Previous class start',
+    },
+    {
+      '[M',
+      function() ts_move().goto_previous_end('@function.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Previous function end',
+    },
+    {
+      '[]',
+      function() ts_move().goto_previous_end('@class.outer', 'textobjects') end,
+      mode = { 'n', 'x', 'o' },
+      desc = 'Previous class end',
+    },
     -- NOTE: lsp_interop no longer supported by tree-sitter
     -- try to extract it?
     -- {
