@@ -196,4 +196,34 @@ vim.api.nvim_create_autocmd('PackChanged', {
 ---@param name string
 ---@param fn fun(data: vim.event.packchanged.data): nil
 _G.pack_install_hook = function(name, fn) pack_hooks[name] = fn end
+
+vim.g.bedlamzd = {
+  tooling = {
+    lsp = {
+      'basedpyright',
+      'bashls',
+      'docker_compose_language_service',
+      'docker_language_server',
+      'dockerls',
+      'harper_ls',
+      'jsonls',
+      'just',
+      'lua_ls',
+      'markdown_oxide',
+      'ruff',
+      'stylua', -- Used to format lua code
+      'tombi',
+      'yamlls',
+    },
+    dap = { 'debugpy' },
+    exec = {
+      'jq',
+      'yamlfmt',
+      'mdformat',
+      'sqlfmt',
+      'sqlfluff',
+    },
+  },
+}
+
 -- vim: ts=2 sts=2 sw=2 et

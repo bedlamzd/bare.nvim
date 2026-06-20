@@ -1,39 +1,18 @@
--- NOTE: ufo plugin compatibility
---  although not sure if still needed
-vim.lsp.config('*', {
-  before_init = function(init_params, config)
-    local is_ufo_enabled = require('lazy.core.config').plugins['nvim-ufo'] ~= nil
-    if is_ufo_enabled then
-      config.capabilities.textDocument.foldingRange =
-        vim.tbl_deep_extend('force', config.capabilities.textDocument.foldingRange, {
-          dynamicRegistration = false,
-          lineFoldingOnly = true,
-        })
-    end
-  end,
-  capabilities = {
-    textDocument = {
-      foldingRange = {},
-    },
-  },
-})
+local enabled = true
 
-local servers_to_enable = {
-  'basedpyright',
-  'bashls',
-  'docker_compose_language_service',
-  'docker_language_server',
-  'dockerls',
-  'harper_ls',
-  'jsonls',
-  'just',
-  'lua_ls',
-  'markdown_oxide',
-  'ruff',
-  'stylua', -- Used to format lua code
-  'tombi',
-  'yamlls',
+if not enabled then return end
+
+vim.pack.add {
+  'https://github.com/neovim/nvim-lspconfig',
+  'https://github.com/j-hui/fidget.nvim',
+  'https://github.com/mason-org/mason.nvim',
+  'https://github.com/mason-org/mason-lspconfig.nvim',
+  'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
 }
+
+require('fidget').setup()
+
+vim.lsp.enable(vim.g.bedlamzd.tooling.lsp)
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -91,7 +70,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
         callback = function(event2)
           vim.lsp.buf.clear_references()
-          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+          vim.api.nvim_clear_autocmds {
+            group = 'kickstart-lsp-highlight',
+            buffer = event2.buf,
+          }
         end,
       })
     end
@@ -106,39 +88,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
   end,
 })
-
----@module 'lazy'
----@type LazySpec
-return {
-  'neovim/nvim-lspconfig',
-  lazy = false,
-  dependencies = {
-    -- NOTE: config for mason is in dedicated file. here I merely state dependency
-    'mason-org/mason.nvim',
-    -- NOTE: Maps LSP server names between nvim-lspconfig and Mason package names.
-    -- TODO: delete?
-    {
-      'mason-org/mason-lspconfig.nvim',
-      ensure_installed = {},
-      automatic_enable = false,
-    },
-    {
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-      opts = {
-        ensure_installed = vim.list_extend(servers_to_enable, {
-          'jq',
-          'yamlfmt',
-          'mdformat',
-          'sqlfmt',
-          'sqlfluff',
-          'debugpy',
-        }),
-      },
-    },
-    -- Useful status updates for LSP.
-    { 'j-hui/fidget.nvim', opts = {} },
-    -- NOTE: needed for yaml/json schema support in their lsp
-    'b0o/schemastore.nvim',
-  },
-  config = function() vim.lsp.enable(servers_to_enable) end,
-}
