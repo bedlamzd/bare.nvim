@@ -17,9 +17,20 @@ vim.pack.add {
   'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
 }
 
+-- NOTE: can't add the same way as `just`, because the queries aren't in language scoped dir
+pack_install_hook('tree-sitter-d2', function(data)
+  local name, kind = data.spec.name, data.kind
+  if not (kind == 'install' or kind == 'update') then return end
+  vim.system({ 'make', 'nvim-install' }, { cwd = data.path })
+end)
+
+vim.pack.add { 'https://github.com/ravsii/tree-sitter-d2' }
+require('tree-sitter-d2').setup {}
+
 local parsers = {
   'bash',
   'c',
+  'd2',
   'diff',
   'dockerfile',
   'git_rebase',
