@@ -1,3 +1,6 @@
+-- make startup faster
+vim.loader.enable()
+
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -191,38 +194,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.hl.on_yank() end,
 })
 
-local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
-  local out =
-    vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
-end
+local pack_hooks = {}
 
----@type vim.Option
-local rtp = vim.opt.rtp
-rtp:prepend(lazypath)
-
-require('lazy').setup({
-  { import = 'plugins' },
-}, { ---@diagnostic disable-line: missing-fields
-  ui = {
-    icons = vim.g.have_nerd_font and {} or {
-      cmd = '⌘',
-      config = '🛠',
-      event = '📅',
-      ft = '📂',
-      init = '⚙',
-      keys = '🗝',
-      plugin = '🔌',
-      runtime = '💻',
-      require = '🌙',
-      source = '📄',
-      start = '🚀',
-      task = '📌',
-      lazy = '💤 ',
-    },
-  },
+vim.api.nvim_create_autocmd('PackChanged', {
+  desc = 'Vim Pack install hook',
+  callback = function(ev)
+    local hook = pack_hooks[ev.data.spec.name]
+    if hook == nil then
+      vim.notify('No hook ' .. ev.data.spec.name, 0)
+      return
+    end
+    hook(ev.data)
+  end,
 })
-
+---Add a vim.pack PackChanged hook
+---@param name string
+---@param fn fun(data: vim.event.packchanged.data): nil
+_G.pack_install_hook = function(name, fn) pack_hooks[name] = fn end
 -- vim: ts=2 sts=2 sw=2 et
