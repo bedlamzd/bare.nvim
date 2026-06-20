@@ -226,4 +226,6 @@ vim.g.bedlamzd = {
   },
 }
 
+pcall(require, 'colorschemes')
+
 -- vim: ts=2 sts=2 sw=2 et
