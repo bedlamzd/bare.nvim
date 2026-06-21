@@ -1,4 +1,4 @@
-local enabled = true and vim.g.have_nerd_font
+local enabled = false and vim.g.have_nerd_font
 
 if not enabled then return end
 
