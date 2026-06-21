@@ -236,4 +236,12 @@ vim.g.bedlamzd = {
 
 pcall(require, 'colorschemes')
 
+vim.api.nvim_create_user_command(
+  'Plugins',
+  function() vim.pack.update(nil, { offline = true }) end,
+  {}
+)
+
+vim.api.nvim_create_user_command('PluginsSync', function() vim.pack.update(nil) end, {})
+
 -- vim: ts=2 sts=2 sw=2 et
