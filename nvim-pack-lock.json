@@ -47,6 +47,10 @@
       "rev": "6f793b2bcd2d35e201c09520f698bb763220908a",
       "src": "https://github.com/j-hui/fidget.nvim"
     },
+    "gitportal.nvim": {
+      "rev": "31f48653c4b179009e89f42fa31acada3f645a88",
+      "src": "https://codeberg.org/trevorhauter/gitportal.nvim"
+    },
     "gitsigns.nvim": {
       "rev": "2038c666bd9d8a0b7349a0b6ee00dc83104b9ecf",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
