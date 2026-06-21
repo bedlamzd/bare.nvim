@@ -25,6 +25,7 @@ vim.pack.add {
     src = 'https://github.com/L3MON4D3/LuaSnip',
     version = vim.version.range '2.*',
   },
+  'https://github.com/disrupted/blink-cmp-conventional-commits',
 }
 local ls = require 'luasnip'
 ls.setup {
@@ -45,6 +46,9 @@ require('blink.cmp').setup {
   },
   sources = {
     default = { 'lsp', 'snippets', 'buffer', 'path' },
+    per_filetype = {
+      gitcommit = { 'commits', inherit_defaults = true },
+    },
     providers = {
       path = {
         opts = {
@@ -57,6 +61,11 @@ require('blink.cmp').setup {
         --  which messes with blink. So on WSL I disabled command completion
         enabled = vim.fn.has 'wsl' and function() return vim.fn.getcmdline():sub(1, 1) ~= '!' end
           or true,
+      },
+      commits = {
+        name = 'Conventional Commits',
+        module = 'blink-cmp-conventional-commits',
+        opts = {},
       },
     },
   },

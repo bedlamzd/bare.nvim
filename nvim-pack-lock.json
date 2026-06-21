@@ -9,6 +9,10 @@
       "rev": "db99dda557d702ecb72ab86b26b7e5b38b6dcade",
       "src": "https://github.com/XXiaoA/atone.nvim"
     },
+    "blink-cmp-conventional-commits": {
+      "rev": "28f46593ef5e03ba7525bdf6075be0c56c6ceb55",
+      "src": "https://github.com/disrupted/blink-cmp-conventional-commits"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
