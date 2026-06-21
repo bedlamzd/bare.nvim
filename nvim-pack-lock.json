@@ -13,6 +13,10 @@
       "rev": "28f46593ef5e03ba7525bdf6075be0c56c6ceb55",
       "src": "https://github.com/disrupted/blink-cmp-conventional-commits"
     },
+    "blink-cmp-git": {
+      "rev": "d3f2a9067ab028e779d08e61bf0b054939011316",
+      "src": "https://github.com/Kaiser-Yang/blink-cmp-git"
+    },
     "blink.cmp": {
       "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",

@@ -26,6 +26,7 @@ vim.pack.add {
     version = vim.version.range '2.*',
   },
   'https://github.com/disrupted/blink-cmp-conventional-commits',
+  'https://github.com/Kaiser-Yang/blink-cmp-git',
 }
 local ls = require 'luasnip'
 ls.setup {
@@ -47,7 +48,8 @@ require('blink.cmp').setup {
   sources = {
     default = { 'lsp', 'snippets', 'buffer', 'path' },
     per_filetype = {
-      gitcommit = { 'commits', inherit_defaults = true },
+      gitcommit = { 'commits', 'git', inherit_defaults = true },
+      octo = { 'git', inherit_defaults = true },
     },
     providers = {
       path = {
@@ -65,6 +67,11 @@ require('blink.cmp').setup {
       commits = {
         name = 'Conventional Commits',
         module = 'blink-cmp-conventional-commits',
+        opts = {},
+      },
+      git = {
+        name = 'git',
+        module = 'blink-cmp-git',
         opts = {},
       },
     },
