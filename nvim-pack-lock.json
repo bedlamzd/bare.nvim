@@ -5,6 +5,10 @@
       "src": "https://github.com/L3MON4D3/LuaSnip",
       "version": "2.0.0 - 3.0.0"
     },
+    "SchemaStore.nvim": {
+      "rev": "c73e2b170a4927d1dc1b48e878bba6cf0ed9b07c",
+      "src": "https://github.com/b0o/SchemaStore.nvim"
+    },
     "atone.nvim": {
       "rev": "db99dda557d702ecb72ab86b26b7e5b38b6dcade",
       "src": "https://github.com/XXiaoA/atone.nvim"

@@ -22,19 +22,18 @@ end
 return {
   -- NOTE: defer loading schemas until LS actually needed
   before_init = function(init_params, config)
+    local schemas = vim.iter(k8s_schemas()):fold({}, function(acc, v)
+      local schema_path, pattern = unpack(v)
+      acc[#acc + 1] = {
+        fileMatch = pattern,
+        name = vim.fs.basename(schema_path),
+        url = 'file://' .. schema_path,
+      }
+      return acc
+    end)
+    local ok, schemastore = pcall(require, 'schemastore')
     config.settings.yaml = vim.tbl_deep_extend('force', config.settings.yaml, {
-      -- TODO: use pcall here, in case plugin is not installed
-      schemas = require('schemastore').yaml.schemas {
-        extra = vim.iter(k8s_schemas()):fold({}, function(acc, v)
-          local schema_path, pattern = unpack(v)
-          acc[#acc + 1] = {
-            fileMatch = pattern,
-            name = vim.fs.basename(schema_path),
-            url = 'file://' .. schema_path,
-          }
-          return acc
-        end),
-      },
+      schemas = ok and schemastore.yaml.schemas { extra = schemas } or schemas,
     })
   end,
   settings = {
