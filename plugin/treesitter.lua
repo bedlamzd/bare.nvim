@@ -10,10 +10,7 @@ pack_install_hook('nvim-treesitter', function(data)
 end)
 
 vim.pack.add {
-  {
-    src = 'https://github.com/nvim-treesitter/nvim-treesitter',
-    version = '7caec274fd19c12b55902a5b795100d21531391f',
-  },
+  'https://github.com/nvim-treesitter/nvim-treesitter',
   'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
 }
 
