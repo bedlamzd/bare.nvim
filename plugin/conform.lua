@@ -27,18 +27,16 @@ conform.setup {
   end,
   default_format_opts = { lsp_format = 'fallback' },
   formatters_by_ft = {
-    -- Conform can also run multiple formatters sequentially
-    python = { 'injected', 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
-    yaml = { 'injected', 'yamlfmt' },
-    sql = { 'sqlfluff' },
-    markdown = { 'injected', 'mdformat' },
-    kdl = {'kdlfmt'},
+    d2 = { 'injected', 'd2' },
+    javascript = { 'biome', 'prettierd', 'prettier', stop_after_first = true },
     json = { 'jq' },
     jsonc = { 'jq' },
+    kdl = { 'kdlfmt' },
+    markdown = { 'injected', 'mdformat' },
+    python = { 'injected', 'ruff_fix', 'ruff_format', 'ruff_organize_imports' },
+    sql = { 'sqlfluff' },
     toml = { 'tombi' },
-    --
-    -- You can use 'stop_after_first' to run the first available formatter from the list
-    javascript = { 'biome', 'prettierd', 'prettier', stop_after_first = true },
+    yaml = { 'injected', 'yamlfmt' },
   },
 }
 
