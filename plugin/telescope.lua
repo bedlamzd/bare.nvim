@@ -28,6 +28,7 @@ ts.setup {
       '--column',
       '--smart-case',
       '--multiline',
+      '--follow',
     },
     --   mappings = {
     --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
@@ -43,19 +44,18 @@ pcall(ts.load_extension, 'fzf')
 pcall(ts.load_extension, 'ui-select')
 
 local builtin = require 'telescope.builtin'
+
+local function find_files(opts)
+  return builtin.find_files(vim.tbl_extend('force', { follow = true }, opts or {}))
+end
+
 vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sf', find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set(
   'n',
   '<leader>sF',
-  function()
-    return builtin.find_files {
-      hidden = true,
-      no_ignore = true,
-      no_ignore_parent = true,
-    }
-  end,
+  function() return find_files { hidden = true, no_ignore = true, no_ignore_parent = true } end,
   { desc = '[S]earch [F]iles everywhere' }
 )
 vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
