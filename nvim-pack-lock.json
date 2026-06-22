@@ -171,6 +171,11 @@
       "rev": "6f05811621460eca983bf2cd877e63c59a40720e",
       "src": "https://github.com/jmbuhr/otter.nvim"
     },
+    "plantuml-syntax": {
+      "rev": "9d4900aa16674bf5bb8296a72b975317d573b547",
+      "src": "https://github.com/aklt/plantuml-syntax",
+      "version": "'9d4900aa16674bf5bb8296a72b975317d573b547'"
+    },
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
