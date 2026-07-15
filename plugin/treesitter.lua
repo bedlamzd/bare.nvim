@@ -14,6 +14,11 @@ vim.pack.add {
   'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
 }
 
+vim.treesitter.query.add_predicate('is-mise?', function(_, _, bufnr, _)
+  local ft = vim.api.nvim_get_option_value('filetype', { buf = tonumber(bufnr) or 0 })
+  return ft ~= nil and vim.list_contains(vim.split(ft, '.', { plain = true }), 'mise')
+end)
+
 -- NOTE: can't add the same way as `just`, because the queries aren't in language scoped dir
 pack_install_hook('tree-sitter-d2', function(data)
   local name, kind = data.spec.name, data.kind
