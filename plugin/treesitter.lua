@@ -15,7 +15,7 @@ vim.pack.add {
 }
 
 vim.treesitter.query.add_predicate('is-mise?', function(_, _, bufnr, _)
-  local ft = vim.api.nvim_get_option_value('filetype', { buf = tonumber(bufnr) or 0 })
+  local ft = vim.bo[tonumber(bufnr) or 0].filetype
   return ft ~= nil and vim.list_contains(vim.split(ft, '.', { plain = true }), 'mise')
 end)
 
