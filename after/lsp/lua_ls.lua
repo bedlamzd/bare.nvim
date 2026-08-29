@@ -12,18 +12,15 @@ return {
       end
     end
 
-    config.settings.Lua = vim.tbl_deep_extend('force', config.settings.Lua, {
+    local settings = config.settings --[[@as lspconfig.settings.lua_ls]]
+    settings.Lua = vim.tbl_deep_extend('force', config.settings.Lua, {
       runtime = {
         version = 'LuaJIT',
         path = { 'lua/?.lua', 'lua/?/init.lua' },
       },
       workspace = {
         checkThirdParty = false,
-        library = {
-          vim.env.VIMRUNTIME,
-          '${3rd}/luv/library',
-          '${3rd}/busted/library',
-        },
+        library = { vim.env.VIMRUNTIME },
       },
     })
   end,
