@@ -47,6 +47,10 @@
       "rev": "54d71d6ae72afa236eedb2a918a35d7414ba39f6",
       "src": "https://github.com/3rd/diagram.nvim"
     },
+    "diffview-plus.nvim": {
+      "rev": "b297353e82c0390a2ca0c549b1c1acb6802e0c4c",
+      "src": "https://github.com/dlyongemallo/diffview-plus.nvim"
+    },
     "eyeliner.nvim": {
       "rev": "8f197eb30cecdf4c2cc9988a5eecc6bc34c0c7d6",
       "src": "https://github.com/jinh0/eyeliner.nvim"
