@@ -15,9 +15,12 @@ vim.pack.add {
   'https://github.com/3rd/diagram.nvim',
 }
 
-vim.g.render_markdown_config = {
+require('render-markdown').setup {
   completions = { lsp = { enabled = true } },
   win_options = { conceallevel = { rendered = 2 } },
+  pipe_table = {
+    border_virtual = true,
+  },
 }
 
 vim.api.nvim_create_autocmd('FileType', {
