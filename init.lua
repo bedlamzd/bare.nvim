@@ -230,6 +230,7 @@ _G.bedlamzd = {
       'jq',
       'yamlfmt',
       'mdformat',
+      'kdlfmt',
       'sqlfmt',
       'sqlfluff',
     },

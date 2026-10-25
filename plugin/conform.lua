@@ -32,6 +32,7 @@ conform.setup {
     yaml = { 'injected', 'yamlfmt' },
     sql = { 'sqlfluff' },
     markdown = { 'injected', 'mdformat' },
+    kdl = {'kdlfmt'},
     json = { 'jq' },
     jsonc = { 'jq' },
     toml = { 'tombi' },
