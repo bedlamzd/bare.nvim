@@ -208,6 +208,7 @@ _G.pack_install_hook = function(name, fn) pack_hooks[name] = fn end
 vim.g.bedlamzd = {
   tooling = {
     lsp = {
+      'awk_ls',
       'basedpyright',
       'bashls',
       'docker_compose_language_service',
