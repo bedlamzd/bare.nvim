@@ -9,7 +9,7 @@ vim.pack.add {
 
 require('fidget').setup()
 
-vim.lsp.enable(vim.g.bedlamzd.tooling.lsp)
+vim.lsp.enable(vim.iter(bedlamzd.tooling.lsp):map(function(v) return v[1] or v end):totable())
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),

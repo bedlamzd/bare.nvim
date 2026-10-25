@@ -205,7 +205,7 @@ vim.api.nvim_create_autocmd('PackChanged', {
 ---@param fn fun(data: vim.event.packchanged.data): nil
 _G.pack_install_hook = function(name, fn) pack_hooks[name] = fn end
 
-vim.g.bedlamzd = {
+_G.bedlamzd = {
   tooling = {
     lsp = {
       'awk_ls',
@@ -217,6 +217,7 @@ vim.g.bedlamzd = {
       'harper_ls',
       'jsonls',
       'just',
+      { 'kdl_lsp', mason = false },
       'lua_ls',
       'markdown_oxide',
       'ruff',

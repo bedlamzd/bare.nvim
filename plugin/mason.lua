@@ -27,5 +27,9 @@ require('mason-nvim-dap').setup {
 }
 
 require('mason-tool-installer').setup {
-  ensure_installed = vim.iter(vim.tbl_values(vim.g.bedlamzd.tooling)):flatten():totable(),
+  ensure_installed = vim
+    .iter(vim.tbl_values(bedlamzd.tooling))
+    :flatten()
+    :filter(function(v) return v.mason == nil or v.mason end)
+    :totable(),
 }
