@@ -20,21 +20,8 @@ vim.g.render_markdown_config = {
   win_options = { conceallevel = { rendered = 2 } },
 }
 
-local diagram_loaded = false
-
 vim.api.nvim_create_autocmd('FileType', {
   callback = function(ev)
-    if not diagram_loaded then
-      diagram_loaded = true
-      require('diagram').setup {
-        events = {
-          -- render manually only, because of zellij
-          render_buffer = {},
-          clear_buffer = { 'BufLeave' },
-        },
-      }
-    end
-
     vim.keymap.set(
       'n',
       '<leader>pi',
